@@ -1,6 +1,6 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-  SimpleLogger.php - Part of the simple-login project.
+  NullLoggerhp - Part of the simple-login project.
 
   © - Jitesoft 2017
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -10,23 +10,11 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 
 /**
- * Class SimpleLogger
+ * Class NullLogger
  *
- * Simple default logger which uses STDOUT as output method.
+ * Simple default logger which does not log anything at all.
  */
-class SimpleLogger implements LoggerInterface {
-
-    private function interpolate($message, $context = array()) {
-        // This is just taken right off from the reference example of the php psr-3 docs.
-        // The simple logger is not really supposed to be used, but if it is, it will use this function for now.
-        $replace = array();
-        foreach ($context as $key => $val) {
-            if (!is_array($val) && (!is_object($val) || method_exists($val, '__toString'))) {
-                $replace['{' . $key . '}'] = $val;
-            }
-        }
-        return strtr($message, $replace);
-    }
+class NullLogger implements LoggerInterface {
 
     /**
      * System is unusable.
@@ -145,11 +133,6 @@ class SimpleLogger implements LoggerInterface {
      * @return void
      */
     public function log($level, $message, array $context = array()) {
-
-        $message = sprintf('{%s}: %s', 'SimpleLoginLogLevel', $message);
-        fwrite(
-            STDOUT,
-            $this->interpolate($message, $context + ['SimpleLoginLogLevel' => strtoupper($level)])
-        );
+        // Do nothing.
     }
 }

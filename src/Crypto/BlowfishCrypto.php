@@ -7,7 +7,7 @@
 namespace Jitesoft\SimpleLogin\Crypto;
 
 use Jitesoft\SimpleLogin\Contracts\CryptoInterface;
-use Jitesoft\SimpleLogin\SimpleLogger;
+use Jitesoft\SimpleLogin\NullLogger;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -21,7 +21,7 @@ class BlowfishCrypto implements CryptoInterface {
     private $logger;
 
     public function __construct() {
-        $this->setLogger(new SimpleLogger());
+        $this->setLogger(new NullLogger());
     }
 
     /**

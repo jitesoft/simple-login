@@ -9,12 +9,12 @@ namespace Jitesoft\SimpleLogin\Contracts;
 use Psr\Log\LoggerAwareInterface as LoggerAware;
 
 /**
- * Interface AuthenticatiorInterface
+ * Interface AuthenticatorInterface
  * @package Contracts
  *
  * Interface for Authenticator services.
  */
-interface AuthenticatiorInterface extends LoggerAware {
+interface AuthenticatorInterface extends LoggerAware {
 
     /**
      * @param SessionStorageInterface $sessionStorage
