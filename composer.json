@@ -5,22 +5,22 @@
     "license": "MIT",
     "authors": [
         {
-            "name": "Johannes",
+            "name": "Johannes Tegnér",
             "email": "johannes@jitesoft.com"
         }
     ],
     "autoload": {
         "psr-4": {
-            "Jitesoft\\SimpleLogin\\": "/src"
+            "Jitesoft\\SimpleLogin\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Jitesoft\\SimpleLogin\\Tests\\": "/tests"
+            "Jitesoft\\SimpleLogin\\Tests\\": "tests/"
         }
     },
     "require": {
-      "php": ">=7.2",
+        "php": ">=7.2",
         "psr/log": "^1.0"
     },
     "require-dev": {

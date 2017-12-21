@@ -4,7 +4,7 @@
 
   © - Jitesoft 2017
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-namespace Contracts;
+namespace Jitesoft\SimpleLogin\Contracts;
 
 /**
  * Interface AuthenticableInterface

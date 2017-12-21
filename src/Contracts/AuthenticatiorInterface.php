@@ -4,7 +4,7 @@
 
   © - Jitesoft 2017
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-namespace Contracts;
+namespace Jitesoft\SimpleLogin\Contracts;
 
 use Psr\Log\LoggerAwareInterface as LoggerAware;
 
@@ -34,11 +34,12 @@ interface AuthenticatiorInterface extends LoggerAware {
     /**
      * Log in a user.
      *
-     * @param string $identifier           - The user identifier (email, username or the like).
-     * @param string $key                  - The key which is used for authentication, password.
+     * @param string $identifier - The user identifier (email, username or the like).
+     * @param string $key        - The key which is used for authentication, password.
+     * @param bool   $remember   - If a remember token should be stored.
      * @return AuthenticableInterface|null - Result, User object on successful login, else null.
      */
-    public function login(string $identifier, string $key): ?AuthenticableInterface;
+    public function login(string $identifier, string $key, bool $remember = false): ?AuthenticableInterface;
 
     /**
      * Log out given authenticable from the system.
