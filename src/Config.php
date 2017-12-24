@@ -8,6 +8,8 @@ namespace Jitesoft\SimpleLogin;
 
 use Jitesoft\Container\Container;
 use Jitesoft\Log\NullLogger;
+use Jitesoft\SimpleLogin\CookieHandler\CookieHandler;
+use Jitesoft\SimpleLogin\CookieHandler\CookieHandlerInterface;
 use Jitesoft\SimpleLogin\Crypto\CryptoInterface;
 use Jitesoft\SimpleLogin\Crypto\BlowfishCrypto;
 use Jitesoft\SimpleLogin\SessionStorage\SessionStorage;
@@ -19,7 +21,8 @@ return [
     'Container' => new Container([
         LoggerInterface::class         => new NullLogger(),
         CryptoInterface::class         => new BlowfishCrypto(),
-        SessionStorageInterface::class => new SessionStorage()
+        SessionStorageInterface::class => new SessionStorage(),
+        CookieHandlerInterface::class  => new CookieHandler()
     ]),
     'ThrowExceptions' => true
 ];

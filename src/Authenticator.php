@@ -10,7 +10,6 @@ use Jitesoft\Container\Container;
 use Jitesoft\SimpleLogin\CookieHandler\CookieHandlerInterface;
 use Jitesoft\SimpleLogin\Crypto\CryptoInterface;
 use Jitesoft\SimpleLogin\SessionStorage\SessionStorageInterface;
-use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 
 class Authenticator implements AuthenticatorInterface {
@@ -36,7 +35,7 @@ class Authenticator implements AuthenticatorInterface {
 
     public function __construct() {
         $config    = $this->getConfig();
-        $container = $config[ContainerInterface::class];
+        $container = $config['Container'];
 
         if ($container instanceof Container) {
             foreach ($config['Dependencies'] as $interface => $value) {
@@ -48,7 +47,7 @@ class Authenticator implements AuthenticatorInterface {
         $this->sessionStorage          = $container->get(SessionStorageInterface::class);
         $this->logger                  = $container->get(LoggerInterface::class);
         $this->authenticableRepository = $container->get(AuthenticableRepositoryInterface::class);
-        //$this->cookieHandler           = $container->get(CookieHandlerInterface::class);
+        $this->cookieHandler           = $container->get(CookieHandlerInterface::class);
     }
 
     public function getLoggedInAuthenticable(): ?AuthenticableInterface {
@@ -58,7 +57,8 @@ class Authenticator implements AuthenticatorInterface {
 
     /**
      * @param SessionStorageInterface $sessionStorage
-     * @return mixed
+     *
+     * @return void
      */
     public function setSessionStorage(SessionStorageInterface $sessionStorage) {
         $this->sessionStorage = $sessionStorage;
@@ -110,7 +110,8 @@ class Authenticator implements AuthenticatorInterface {
 
             if ($remember) {
                 // Create remember token from random string.
-                $key = openssl_random_pseudo_bytes(64);
+                $userIp = $_SERVER['REMOTE_ADDR'];
+                $key    = openssl_random_pseudo_bytes(64);
                 $auth->setRememberToken($key);
                 $this->authenticableRepository->setRememberToken($auth->getAuthIdentifier(), $auth->getRememberToken());
                 $this->cookieHandler->set(
@@ -119,7 +120,7 @@ class Authenticator implements AuthenticatorInterface {
                        sprintf(
                            $this->rememberTokenFormat,
                            $auth->getAuthIdentifier(),
-                           $this->crypto->encrypt($key)
+                           $this->crypto->encrypt(sprintf('%s.%s', $key, $userIp))
                        )
                    )
                 );
@@ -143,6 +144,7 @@ class Authenticator implements AuthenticatorInterface {
             return null;
         }
 
+        $userIp  = $_SERVER['REMOTE_ADDR'];
         $decoded = base64_decode($cookie);
         $id      = explode(':', $decoded)[0];
         $key     = explode(':', $decoded)[1];
@@ -152,7 +154,7 @@ class Authenticator implements AuthenticatorInterface {
             return null;
         }
 
-        if ($this->crypto->validate($auth->getRememberToken(), $key)) {
+        if ($this->crypto->validate($auth->getRememberToken(), sprintf('%s.%s', $key, $userIp))) {
             return $auth;
         }
 

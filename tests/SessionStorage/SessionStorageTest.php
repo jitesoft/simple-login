@@ -8,9 +8,7 @@ namespace Jitesoft\SimpleLogin\Tests\SessionStorage;
 
 use Jitesoft\SimpleLogin\SessionStorage\SessionStorage;
 use Jitesoft\SimpleLogin\SessionStorage\SessionStorageInterface;
-use phpmock\Mock;
 use PHPUnit\Framework\TestCase;
-use ReflectionClass;
 
 class SessionStorageTest extends TestCase {
 
