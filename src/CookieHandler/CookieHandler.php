@@ -17,7 +17,7 @@ class CookieHandler implements CookieHandlerInterface {
      * @return null|string  - The resulting value as string, null if no cookie was found with given id.
      */
     public function get(string $id): ?string {
-        // TODO: Implement get() method.
+
     }
 
     /**
@@ -36,7 +36,7 @@ class CookieHandler implements CookieHandlerInterface {
                         string $domain = '',
                         string $location = ''
     ): bool {
-        // TODO: Implement set() method.
+
     }
 
     /**
@@ -47,6 +47,7 @@ class CookieHandler implements CookieHandlerInterface {
      * @return void
      */
     public function setLogger(LoggerInterface $logger) {
-        // TODO: Implement setLogger() method.
+
     }
+
 }

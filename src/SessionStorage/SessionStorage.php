@@ -46,6 +46,9 @@ class SessionStorage implements SessionStorageInterface {
         $this->logger = $logger;
     }
 
+    /**
+     * @return LoggerInterface
+     */
     private function getLogger(): LoggerInterface {
         return $this->logger ?? new NullLogger();
     }
@@ -61,8 +64,9 @@ class SessionStorage implements SessionStorageInterface {
     public function get(string $key, $default = null) {
         $this->getLogger()->debug("Trying to fetch value from session with key {key}.", ['key'=> $key]);
 
-        $value = $_SESSION[sprintf($this->sessionFromat, $key)];
-        if ($value === '') {
+        $key   = sprintf($this->sessionFromat, $key);
+        $value = isset($_SESSION[$key]) ? $_SESSION[$key] : null;
+        if ($value === null) {
             $this->getLogger()->error("Failed to get session value with key {key}.", ['key' => $key]);
             return $default;
         }
@@ -90,7 +94,12 @@ class SessionStorage implements SessionStorageInterface {
     public function unset(string $key): bool {
         $this->getLogger()->debug('Attempting to destroy session with key {key}.', ['key' => $key]);
 
-        unset($_SESSION[sprintf($this->sessionFromat, $key)]);
+        $key = sprintf($this->sessionFromat, $key);
+        if (!isset($_SESSION[$key])) {
+            return false;
+        }
+
+        unset($_SESSION[$key]);
         return true;
     }
 
