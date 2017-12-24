@@ -4,13 +4,15 @@
 
   © - Jitesoft 2017
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-namespace Jitesoft\SimpleLogin\Contracts;
+namespace Jitesoft\SimpleLogin\SessionStorage;
 
 use Psr\Log\LoggerAwareInterface as LoggerAware;
 
 /**
  * Interface SessionStorageInterface
  * @package Contracts
+ *
+ * Contract for session storage implementations.
  */
 interface SessionStorageInterface extends LoggerAware {
 

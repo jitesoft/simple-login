@@ -4,7 +4,7 @@
 
   © - Jitesoft 2017
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-namespace Jitesoft\SimpleLogin\Contracts;
+namespace Jitesoft\SimpleLogin;
 
 /**
  * Interface AuthenticableInterface
@@ -13,13 +13,6 @@ namespace Jitesoft\SimpleLogin\Contracts;
  * Interface for models which can be authenticated by the simple login system.
  */
 interface AuthenticableInterface {
-
-    /**
-     * Get the name of the identifier column which is used in authentication for the Authenticable.
-     *
-     * @return string - Identifier name.
-     */
-    public function getAuthIdentifierName(): string;
 
     /**
      * Get the unique identifier for the Authenticable.
@@ -49,12 +42,5 @@ interface AuthenticableInterface {
      * @return void
      */
     public function setRememberToken(string $token);
-
-    /**
-     * Get the name of the token table column which is used to authenticate the user.
-     *
-     * @return string - Column name.
-     */
-    public function getRememberTokenName(): string;
 
 }

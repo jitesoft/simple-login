@@ -4,7 +4,7 @@
 
   © - Jitesoft 2017
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-namespace Jitesoft\SimpleLogin\Contracts;
+namespace Jitesoft\SimpleLogin\Crypto;
 
 use Psr\Log\LoggerAwareInterface as LoggerAware;
 

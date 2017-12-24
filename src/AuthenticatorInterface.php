@@ -4,8 +4,9 @@
 
   © - Jitesoft 2017
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-namespace Jitesoft\SimpleLogin\Contracts;
+namespace Jitesoft\SimpleLogin;
 
+use Jitesoft\SimpleLogin\SessionStorage\SessionStorageInterface;
 use Psr\Log\LoggerAwareInterface as LoggerAware;
 
 /**
@@ -15,6 +16,13 @@ use Psr\Log\LoggerAwareInterface as LoggerAware;
  * Interface for Authenticator services.
  */
 interface AuthenticatorInterface extends LoggerAware {
+
+    /**
+     * Get currently logged in authenticable.
+     *
+     * @return AuthenticableInterface|null
+     */
+    public function getLoggedInAuthenticable(): ?AuthenticableInterface;
 
     /**
      * @param SessionStorageInterface $sessionStorage
@@ -40,6 +48,14 @@ interface AuthenticatorInterface extends LoggerAware {
      * @return AuthenticableInterface|null - Result, User object on successful login, else null.
      */
     public function login(string $identifier, string $key, bool $remember = false): ?AuthenticableInterface;
+
+    /**
+     * Log a authenticable in using a remember token.
+     * The cookie is fetched from the CookieHandlerInterface implementation set in the container.
+     *
+     * @return AuthenticableInterface|null
+     */
+    public function cookieLogin(): ?AuthenticableInterface;
 
     /**
      * Log out given authenticable from the system.

@@ -6,8 +6,7 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 namespace Jitesoft\SimpleLogin\Crypto;
 
-use Jitesoft\SimpleLogin\Contracts\CryptoInterface;
-use Jitesoft\SimpleLogin\NullLogger;
+use Jitesoft\Log\NullLogger;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -20,8 +19,19 @@ class BlowfishCrypto implements CryptoInterface {
     /** @var LoggerInterface */
     private $logger;
 
-    public function __construct() {
-        $this->setLogger(new NullLogger());
+    /**
+     * Sets a logger instance on the object.
+     *
+     * @param LoggerInterface $logger
+     *
+     * @return void
+     */
+    public function setLogger(LoggerInterface $logger) {
+        $this->logger = $logger;
+    }
+
+    private function getLogger(): LoggerInterface {
+        return $this->logger ?? new NullLogger();
     }
 
     /**
@@ -31,9 +41,9 @@ class BlowfishCrypto implements CryptoInterface {
      * @return string       - Resulting encrypted string.
      */
     public function encrypt(string $value): string {
-        $this->logger->debug("Encrypting value using Blowfish algorithm");
+        $this->getLogger()->debug("Encrypting value using Blowfish algorithm");
         $value = password_hash($value, PASSWORD_BCRYPT);
-        $this->logger->debug("Encryption complete.");
+        $this->getLogger()->debug("Encryption complete.");
         return $value;
     }
 
@@ -46,23 +56,23 @@ class BlowfishCrypto implements CryptoInterface {
      * @return bool             - Result, true if same else false.
      */
     public function compare(string $value, string $encrypted): bool {
-        $this->logger->debug("Comparing two values using the Blowfish algorithm.");
+        $this->getLogger()->debug("Comparing two values using the Blowfish algorithm.");
 
         // Validate hash type.
         $info = password_get_info($encrypted);
         if ($info['algo'] !== PASSWORD_BCRYPT) {
-            $this->logger->error("Invalid algorithm in the encrypted value. Expected {exp}, got {algo}",
+            $this->getLogger()->error("Invalid algorithm in the encrypted value. Expected {exp}, got {algo}",
                 ['exp' => 'Blowfish', 'algo' => $info['algoName']]
             );
             return false;
         }
 
         if (!password_verify($value, $encrypted)) {
-            $this->logger->error("Comparision failed. Values where not identical.");
+            $this->getLogger()->error("Comparision failed. Values where not identical.");
             return false;
         }
 
-        $this->logger->debug("Comparision complete.");
+        $this->getLogger()->debug("Comparision complete.");
         return true;
     }
 
@@ -75,20 +85,10 @@ class BlowfishCrypto implements CryptoInterface {
      * @return bool             - Result, true if same else false.
      */
     public function validate(string $value, string $encrypted): bool {
-        $this->logger->debug("Validation method called.");
+        $this->getLogger()->debug("Validation method called.");
         $result = $this->compare($value, $encrypted);
-        $this->logger->debug("Validation method finished.");
+        $this->getLogger()->debug("Validation method finished.");
         return $result;
     }
 
-    /**
-     * Sets a logger instance on the object.
-     *
-     * @param LoggerInterface $logger
-     *
-     * @return void
-     */
-    public function setLogger(LoggerInterface $logger) {
-        $this->logger = $logger;
-    }
 }
