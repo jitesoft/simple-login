@@ -4,6 +4,11 @@
 
 [![codecov](https://codecov.io/gh/jitesoft/simple-login/branch/master/graph/badge.svg)](https://codecov.io/gh/jitesoft/simple-login)
 
+## Observe!
+This repository is under development and the project is not yet production ready.  
+
+----
+
 A simple login system which can be used as a standalone package or extended as a package in whatever framework you prefer.
 
 The system is built to be easy to apply to any use case where a login module is required.  
@@ -22,7 +27,7 @@ composer require jitesoft/simple-login
 
 ### Out of the box
 
-The package is intended to be possible to use without modifying 
+The package is intended to be possible to use without more work than implementing a couple of simple interfaces.
 
 
 ### Modifiable parts
@@ -30,13 +35,13 @@ The package is intended to be possible to use without modifying
 #### Authenticable
 
 To be able to use your own models or objects in the login system, the class which is intended to be authenticated
-have to implement the `Jitesoft\SimpleLogin\Contracts\AuthenticableInterface` interface.  
+have to implement the `Jitesoft\SimpleLogin\AuthenticableInterface` interface.  
 If it does not, it is not possible for the system to fetch the required values.  
 
 #### Authenticable repository
 
 For the system to be able to fetch a specific Authenticable, it has to have a AuthenticableRepository which.  
-The repository needs to implement the `Jitesoft\SimpleLogin\Contracts\AuthenticableRepositoryInterface`.  
+The repository needs to implement the `Jitesoft\SimpleLogin\AuthenticableRepositoryInterface`.  
 There is one forced method to implement, and it should return a `AuthenticableInterface` based on its identifier.  
 The identifier is up to you, if its a email, username, or whatever you feel like.
 
@@ -46,10 +51,10 @@ The default logger is a logger which outputs all log information to nothing. The
 
 #### Session storage
 
-The default session storage uses the php SessionHandler class. The `Jitesoft\SimpleLogin\Contracts\SessionStorageInterface` 
+The default session storage uses the php SessionHandler class. The `Jitesoft\SimpleLogin\SessionStorage\SessionStorageInterface` 
 can be implemented to use your own session handler.
 
 #### Crypto
 
 By default, the system uses the Blowfish algorithm to encrypt passwords.  
-It's possible to change the default algorithm by creating a class implementing the `Jitesoft\SimpleLogin\Contracts\CryptoInterface` interface.
+It's possible to change the default algorithm by creating a class implementing the `Jitesoft\SimpleLogin\Crypto\CryptoInterface` interface.
