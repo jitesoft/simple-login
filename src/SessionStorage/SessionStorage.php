@@ -9,7 +9,6 @@ namespace Jitesoft\SimpleLogin\SessionStorage;
 
 use Jitesoft\Log\NullLogger;
 use Psr\Log\LoggerInterface;
-use SessionHandler;
 
 /**
  * Class SessionStorage
@@ -22,14 +21,10 @@ class SessionStorage implements SessionStorageInterface {
 
     protected $logger;
 
-    protected $sessionHandler;
-
     /**
      * SessionStorage constructor.
      */
     public function __construct() {
-        $this->sessionHandler = new SessionHandler();
-        session_set_save_handler($this->sessionHandler);
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }

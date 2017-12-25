@@ -8,6 +8,7 @@ namespace Jitesoft\SimpleLogin\Tests\SessionStorage;
 
 use Jitesoft\SimpleLogin\SessionStorage\SessionStorage;
 use Jitesoft\SimpleLogin\SessionStorage\SessionStorageInterface;
+use phpmock\Mock;
 use PHPUnit\Framework\TestCase;
 
 class SessionStorageTest extends TestCase {
@@ -15,15 +16,26 @@ class SessionStorageTest extends TestCase {
     /** @var SessionStorageInterface */
     private $storage;
 
+    private $mock;
+
     protected function setUp() {
         parent::setUp();
 
+        $this->mock = new Mock(
+            (new \ReflectionClass(SessionStorage::class))->getNamespaceName(),
+            'session_status',
+            function() {
+                return PHP_SESSION_ACTIVE;
+            }
+        );
+        $this->mock->enable();
         $this->storage = new SessionStorage();
     }
 
     protected function tearDown() {
         parent::tearDown();
-        session_destroy();
+        $this->mock->disable();
+        $_SESSION = [];
     }
 
     public function testGetDefault() {
