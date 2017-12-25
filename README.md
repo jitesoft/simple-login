@@ -1,5 +1,9 @@
 # Simple Login
 
+[![Build Status](https://travis-ci.org/jitesoft/simple-login.svg?branch=master)](https://travis-ci.org/jitesoft/simple-login)
+
+[![codecov](https://codecov.io/gh/jitesoft/simple-login/branch/master/graph/badge.svg)](https://codecov.io/gh/jitesoft/simple-login)
+
 A simple login system which can be used as a standalone package or extended as a package in whatever framework you prefer.
 
 The system is built to be easy to apply to any use case where a login module is required.  
