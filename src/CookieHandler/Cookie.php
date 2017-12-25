@@ -23,21 +23,17 @@ class Cookie {
 
     protected $location;
 
-    protected $secure;
-
     public function __construct(string $key,
                                  string $value,
-                                 int $lifetime = 60 * 60 * 24 * 7,
+                                 int $lifetime = 604800,
                                  string $domain = '',
-                                 string $location = '',
-                                 bool $secure = true) {
+                                 string $location = '') {
 
         $this->key      = $key;
         $this->value    = $value;
         $this->lifetime = $lifetime;
         $this->domain   = $domain;
         $this->location = $location;
-        $this->secure   = $secure;
     }
 
     /**
@@ -73,13 +69,6 @@ class Cookie {
      */
     public function getLocation(): string {
         return $this->location;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isSecure(): bool {
-        return $this->secure;
     }
 
 }

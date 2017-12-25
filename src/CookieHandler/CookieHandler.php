@@ -6,19 +6,48 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 namespace Jitesoft\SimpleLogin\CookieHandler;
 
+use Carbon\Carbon;
+use Jitesoft\Log\NullLogger;
 use Psr\Log\LoggerInterface;
 
 class CookieHandler implements CookieHandlerInterface {
+
+    private $logger;
+
+    protected function getLogger(): LoggerInterface {
+        return $this->logger ?? new NullLogger();
+    }
 
     /**
      * Get a cookie from the cookie handler.
      *
      * @param string $id - Cookie identifier or name.
-     * @param mixed $default - Default value to return cookie does not contain any data.
-     * @return Cookie|null   - The resulting value as string, null if no cookie was found with given id.
+     * @return Cookie|null - The resulting value as string, null if no cookie was found with given id.
+     *
      */
-    public function get(string $id, $default = null): ?Cookie {
-        // TODO: Implement get() method.
+    public function get(string $id): ?Cookie {
+        $this->getLogger()->debug('Trying to fetch cookie data from cookie with id {id}.', [
+            'id' => $id
+        ]);
+
+        if (isset($_COOKIE[$id])) {
+            $cookieData = $_COOKIE[$id];
+            $cookieData = json_decode($cookieData, true);
+            $cookie     = new Cookie(
+                $id,
+                $cookieData['value'],
+                $cookieData['lifetime'] - Carbon::Now()->getTimestamp(),
+                $cookieData['domain'],
+                $cookieData['location']
+            );
+            $this->getLogger()->debug('Cookie fetched successfully.');
+            return $cookie;
+        }
+        $this->getLogger()->error('Failed to fetch cookie data for cookie with id {id}.', [
+            'id' => $id
+        ]);
+
+        return null;
     }
 
     /**
@@ -33,11 +62,37 @@ class CookieHandler implements CookieHandlerInterface {
      */
     public function set($cookie,
                         string $value = '',
-                        int $lifetime = (60 * 60 * 24 * 7),
+                        int $lifetime = 604800,
                         string $domain = '',
                         string $location = ''
     ): bool {
-        // TODO: Implement set() method.
+
+        if ($cookie instanceof Cookie) {
+            $value    = $cookie->getValue();
+            $lifetime = $cookie->getLifetime();
+            $domain   = $cookie->getDomain();
+            $location = $cookie->getLocation();
+            $cookie   = $cookie->getKey();
+        }
+
+        $this->getLogger()->debug('Creating a cookie with id {id} and lifetime {lifetime}.',
+            [
+                'id'       => $cookie,
+                'lifetime' => $lifetime
+            ]
+        );
+
+        $value = json_encode([
+            'value'    => $value,
+            'lifetime' => $lifetime,
+            'domain'   => $domain,
+            'location' => $location
+        ]);
+
+        $lifetime = Carbon::now()->getTimestamp() + $lifetime;
+        $result   = setcookie($cookie, $value, $lifetime, $domain, $location, true, false);
+
+        return $result;
     }
 
     /**
@@ -47,7 +102,12 @@ class CookieHandler implements CookieHandlerInterface {
      * @return bool      - Result, true if exists, else false.
      */
     public function has(string $id): bool {
-        // TODO: Implement has() method.
+        $result = array_key_exists($id, $_COOKIE);
+        $this->getLogger()->debug('Checking if cookie with id {id} exists. Result: {result}.', [
+            'id'     => $id,
+            'result' => $result
+        ]);
+        return $result;
     }
 
     /**
@@ -57,7 +117,16 @@ class CookieHandler implements CookieHandlerInterface {
      * @return bool          - Result, true if removed else false.
      */
     public function unset($cookie): bool {
-        // TODO: Implement unset() method.
+        $id = $cookie instanceof Cookie ? $cookie->getValue() : $cookie;
+        $this->getLogger()->debug('Removing cookie with id {id}.', ['id' => $id]);
+        if (!$this->has($id)) {
+            return false;
+        }
+
+        setcookie($id, 'test-value', Carbon::now()->getTimestamp() - 3600);
+        unset($_COOKIE[$id]);
+
+        return $this->has($id);
     }
 
     /**
@@ -68,6 +137,6 @@ class CookieHandler implements CookieHandlerInterface {
      * @return void
      */
     public function setLogger(LoggerInterface $logger) {
-        // TODO: Implement setLogger() method.
+        $this->logger = $logger;
     }
 }

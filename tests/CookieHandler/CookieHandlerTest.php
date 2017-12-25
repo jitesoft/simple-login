@@ -36,7 +36,7 @@ class CookieHandlerTest extends TestCase {
                 $called = true;
 
                 $this->assertEquals('test-key', $key);
-                $this->assertEquals('test-value', $value);
+                $this->assertEquals('{"value":"test-value","lifetime":604800,"domain":"","location":""}', $value);
                 $this->assertEquals(Carbon::now()->addWeek(1)->getTimestamp(), $lifetime);
                 $this->assertEquals('', $domain);
                 $this->assertEquals('', $location);
@@ -61,10 +61,9 @@ class CookieHandlerTest extends TestCase {
             'setcookie',
             function($key, $value, $lifetime, $domain, $location, $secure) use(&$called) {
                 $called = true;
-
                 $this->assertEquals('test-key', $key);
-                $this->assertEquals('test-value', $value);
-                $this->assertEquals(Carbon::now()->addWeek(2)->getTimestamp(), $lifetime);
+                $this->assertEquals('{"value":"test-value","lifetime":1209600,"domain":"","location":""}', $value);
+                $this->assertEquals(Carbon::now()->addWeeks(2)->getTimestamp(), $lifetime);
                 $this->assertEquals('', $domain);
                 $this->assertEquals('', $location);
                 $this->assertTrue($secure);
@@ -74,11 +73,11 @@ class CookieHandlerTest extends TestCase {
 
         $mock->enable();
         $this->assertTrue(
-            $this->cookieHandler->set(new Cookie('test-key', 'test-value', 60 * 60 * 60 * 24 * 7 * 2))
+            $this->cookieHandler->set(new Cookie('test-key', 'test-value', 60 * 60 * 24 * 7 * 2))
         );
         $this->assertTrue($called);
         $called = false;
-        $this->assertTrue($this->cookieHandler->set('test-key', 'test-value', 60 * 60 * 60 * 24 * 7 * 2));
+        $this->assertTrue($this->cookieHandler->set('test-key', 'test-value', 60 * 60 * 24 * 7 * 2));
         $this->assertTrue($called);
         $mock->disable();
     }
@@ -92,9 +91,12 @@ class CookieHandlerTest extends TestCase {
                 $called = true;
 
                 $this->assertEquals('test-key', $key);
-                $this->assertEquals('test-value', $value);
+                $this->assertEquals(
+                    '{"value":"test-value","lifetime":604800,"domain":"domain.tld","location":""}',
+                    $value
+                );
                 $this->assertEquals(Carbon::now()->addWeek(1)->getTimestamp(), $lifetime);
-                $this->assertEquals('domain.tdl', $domain);
+                $this->assertEquals('domain.tld', $domain);
                 $this->assertEquals('', $location);
                 $this->assertTrue($secure);
                 return true;
@@ -103,12 +105,12 @@ class CookieHandlerTest extends TestCase {
 
         $mock->enable();
         $this->assertTrue(
-            $this->cookieHandler->set(new Cookie('test-key', 'test-value', 60 * 60 * 24 * 7, 'domain.tdl'))
+            $this->cookieHandler->set(new Cookie('test-key', 'test-value', 60 * 60 * 24 * 7, 'domain.tld'))
         );
         $this->assertTrue($called);
         $called = false;
         $this->assertTrue(
-            $this->cookieHandler->set('test-key', 'test-value', 60 * 60 * 24 * 7, 'domain.tdl')
+            $this->cookieHandler->set('test-key', 'test-value', 60 * 60 * 24 * 7, 'domain.tld')
         );
         $this->assertTrue($called);
         $mock->disable();
@@ -123,9 +125,12 @@ class CookieHandlerTest extends TestCase {
                 $called = true;
 
                 $this->assertEquals('test-key', $key);
-                $this->assertEquals('test-value', $value);
+                $this->assertEquals(
+                    '{"value":"test-value","lifetime":604800,"domain":"domain.tld","location":"\/test"}',
+                    $value
+                );
                 $this->assertEquals(Carbon::now()->addWeek(1)->getTimestamp(), $lifetime);
-                $this->assertEquals('domain.tdl', $domain);
+                $this->assertEquals('domain.tld', $domain);
                 $this->assertEquals('/test', $location);
                 $this->assertTrue($secure);
                 return true;
@@ -134,12 +139,12 @@ class CookieHandlerTest extends TestCase {
 
         $mock->enable();
         $this->assertTrue(
-            $this->cookieHandler->set(new Cookie('test-key', 'test-value', 60 * 60 * 24 * 7, 'domain.tdl', '/test'))
+            $this->cookieHandler->set(new Cookie('test-key', 'test-value', 60 * 60 * 24 * 7, 'domain.tld', '/test'))
         );
         $this->assertTrue($called);
         $called = false;
         $this->assertTrue(
-            $this->cookieHandler->set('test-key', 'test-value', 60 * 60 * 24 * 7, 'domain.tdl', '/test')
+            $this->cookieHandler->set('test-key', 'test-value', 60 * 60 * 24 * 7, 'domain.tld', '/test')
         );
         $this->assertTrue($called);
         $mock->disable();
@@ -158,12 +163,12 @@ class CookieHandlerTest extends TestCase {
         );
 
         $mock->enable();
-        $this->assertTrue(
+        $this->assertFalse(
             $this->cookieHandler->set(new Cookie('test-key', 'test-value', 60 * 60 * 24 * 7, 'domain.tdl', '/test'))
         );
         $this->assertTrue($called);
         $called = false;
-        $this->assertTrue(
+        $this->assertFalse(
             $this->cookieHandler->set('test-key', 'test-value', 60 * 60 * 24 * 7, 'domain.tdl', '/test')
         );
         $this->assertTrue($called);
@@ -172,13 +177,13 @@ class CookieHandlerTest extends TestCase {
     }
 
     public function testGet() {
-        $_COOKIE['test-key'] = 'test-value';
+        $_COOKIE['test-key'] = '{"value":"test-value","lifetime":604800,"domain":"domain.tld","location":""}';
         $this->assertEquals(
             'test-value',
-            $this->cookieHandler->get('test-key')
+            $this->cookieHandler->get('test-key')->getValue()
         );
 
-        $this->assertEquals('meh', $this->cookieHandler->get('abc', 'meh'));
+        $this->assertNull($this->cookieHandler->get('abc'));
 
         unset($_COOKIE['test-key']);
     }
@@ -188,7 +193,7 @@ class CookieHandlerTest extends TestCase {
         $called = false;
         $mock   = new Mock(
             $this->namespace,
-            'isset',
+            'array_key_exists',
             function() use(&$called) {
                 $called = true;
                 return true;
@@ -205,10 +210,10 @@ class CookieHandlerTest extends TestCase {
         $called = false;
         $mock   = new Mock(
             $this->namespace,
-            'isset',
+            'array_key_exists',
             function() use(&$called) {
                 $called = true;
-                return false();
+                return false;
             }
         );
 
@@ -221,30 +226,21 @@ class CookieHandlerTest extends TestCase {
     public function testUnset() {
         $called  = false;
         $called2 = false;
-        $called3 = false;
 
         $mock1 = new Mock(
             $this->namespace,
-            'isset',
+            'array_key_exists',
             function() use (&$called) {
                 $called = true;
                 return true;
             }
         );
 
-        $mock2 = new Mock(
-            $this->namespace,
-            'unset',
-            function() use (&$called2) {
-                $called2 = true;
-            }
-        );
-
         $mock3 = new Mock(
             $this->namespace,
             'setcookie',
-            function($id, $value, $lifetime) use(&$called3) {
-                $called3 = true;
+            function($id, $value, $lifetime) use(&$called2) {
+                $called2 = true;
                 $this->assertEquals('test-key', $id);
                 $this->assertEquals('test-value', $value);
                 $this->assertEquals(Carbon::now()->getTimestamp() - 3600, $lifetime);
@@ -252,14 +248,11 @@ class CookieHandlerTest extends TestCase {
         );
 
         $mock1->enable();
-        $mock2->enable();
         $mock3->enable();
         $this->assertTrue($this->cookieHandler->unset('test-key'));
         $this->assertTrue($called);
         $this->assertTrue($called2);
-        $this->assertTrue($called3);
         $mock1->disable();
-        $mock2->disable();
         $mock3->disable();
     }
 
@@ -267,10 +260,10 @@ class CookieHandlerTest extends TestCase {
         $called = false;
         $mock   = new Mock(
             $this->namespace,
-            'isset',
+            'array_key_exists',
             function() use (&$called) {
                 $called = true;
-                return true;
+                return false;
             }
         );
 

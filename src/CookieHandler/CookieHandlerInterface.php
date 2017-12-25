@@ -20,10 +20,9 @@ interface CookieHandlerInterface extends LoggerAwareInterface {
      * Get a cookie from the cookie handler.
      *
      * @param string $id     - Cookie identifier or name.
-     * @param mixed $default - Default value to return cookie does not contain any data.
      * @return Cookie|null   - The resulting value as string, null if no cookie was found with given id.
      */
-    public function get(string $id, $default = null): ?Cookie;
+    public function get(string $id): ?Cookie;
 
     /**
      * Set a cookie.
