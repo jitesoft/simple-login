@@ -23,6 +23,7 @@ class SessionStorage implements SessionStorageInterface {
 
     /**
      * SessionStorage constructor.
+     * @codeCoverageIgnore
      */
     public function __construct() {
         if (session_status() === PHP_SESSION_NONE) {
@@ -36,6 +37,7 @@ class SessionStorage implements SessionStorageInterface {
      * @param LoggerInterface $logger
      *
      * @return void
+     * @codeCoverageIgnore
      */
     public function setLogger(LoggerInterface $logger) {
         $this->logger = $logger;

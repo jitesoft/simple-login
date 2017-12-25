@@ -25,6 +25,7 @@ class BlowfishCrypto implements CryptoInterface {
      * @param LoggerInterface $logger
      *
      * @return void
+     * @codeCoverageIgnore
      */
     public function setLogger(LoggerInterface $logger) {
         $this->logger = $logger;

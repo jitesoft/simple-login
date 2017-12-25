@@ -45,4 +45,8 @@ trait CryptoTestTrait {
         $this->assertFalse($result2);
     }
 
+    public function testValidateInvalidAlgo() {
+        $this->assertFalse($this->implementation->validate('abc123', 'abc453'));
+    }
+
 }
