@@ -14,29 +14,50 @@ class CookieHandler implements CookieHandlerInterface {
      * Get a cookie from the cookie handler.
      *
      * @param string $id - Cookie identifier or name.
-     * @return null|string  - The resulting value as string, null if no cookie was found with given id.
+     * @param mixed $default - Default value to return cookie does not contain any data.
+     * @return Cookie|null   - The resulting value as string, null if no cookie was found with given id.
      */
-    public function get(string $id): ?string {
-
+    public function get(string $id, $default = null): ?Cookie {
+        // TODO: Implement get() method.
     }
 
     /**
      * Set a cookie.
      *
-     * @param string $id - Cookie identifier or name.
+     * @param string|Cookie $cookie - Cookie as a cookie object, identifier or name.
      * @param string $value - Value of the cookie as a string.
      * @param int $lifetime - Cookie lifetime (defaults to 7 days).
      * @param string $domain - Domain, defaults to ''.
      * @param string $location - Server location, defaults to ''.
-     * @return bool             - Result, true if success.
+     * @return bool                 - Result, true if success.
      */
-    public function set(string $id,
-                        string $value,
+    public function set($cookie,
+                        string $value = '',
                         int $lifetime = (60 * 60 * 24 * 7),
                         string $domain = '',
                         string $location = ''
     ): bool {
+        // TODO: Implement set() method.
+    }
 
+    /**
+     * Check if a cookie with given identifier/name exists.
+     *
+     * @param string $id - Cookie identifier or name.
+     * @return bool      - Result, true if exists, else false.
+     */
+    public function has(string $id): bool {
+        // TODO: Implement has() method.
+    }
+
+    /**
+     * Remove a given cookie.
+     *
+     * @param string $cookie - Cookie as cookie object, identifier or name.
+     * @return bool          - Result, true if removed else false.
+     */
+    public function unset($cookie): bool {
+        // TODO: Implement unset() method.
     }
 
     /**
@@ -47,7 +68,6 @@ class CookieHandler implements CookieHandlerInterface {
      * @return void
      */
     public function setLogger(LoggerInterface $logger) {
-
+        // TODO: Implement setLogger() method.
     }
-
 }
