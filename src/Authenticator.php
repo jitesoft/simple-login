@@ -12,6 +12,11 @@ use Jitesoft\SimpleLogin\Crypto\CryptoInterface;
 use Jitesoft\SimpleLogin\SessionStorage\SessionStorageInterface;
 use Psr\Log\LoggerInterface;
 
+/**
+ * Class Authenticator
+ *
+ *
+ */
 class Authenticator implements AuthenticatorInterface {
 
     /** @var SessionStorageInterface */
@@ -30,7 +35,7 @@ class Authenticator implements AuthenticatorInterface {
     private $cookieHandler;
 
     private function getConfig() {
-        return require_once dirname(__FILE__) . "/Config.php";
+        return include_once dirname(__FILE__) . "/Config.php";
     }
 
     public function __construct() {

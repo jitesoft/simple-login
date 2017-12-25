@@ -43,6 +43,7 @@ class CookieHandler implements CookieHandlerInterface {
             $this->getLogger()->debug('Cookie fetched successfully.');
             return $cookie;
         }
+
         $this->getLogger()->error('Failed to fetch cookie data for cookie with id {id}.', [
             'id' => $id
         ]);
@@ -140,4 +141,5 @@ class CookieHandler implements CookieHandlerInterface {
     public function setLogger(LoggerInterface $logger) {
         $this->logger = $logger;
     }
+
 }

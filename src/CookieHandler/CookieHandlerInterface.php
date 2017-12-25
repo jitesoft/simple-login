@@ -45,7 +45,6 @@ interface CookieHandlerInterface extends LoggerAwareInterface {
                          string $location = ''
     ): bool;
 
-
     /**
      * Check if a cookie with given identifier/name exists.
      *

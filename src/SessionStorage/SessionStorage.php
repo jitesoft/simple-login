@@ -67,6 +67,7 @@ class SessionStorage implements SessionStorageInterface {
             $this->getLogger()->error("Failed to get session value with key {key}.", ['key' => $key]);
             return $default;
         }
+
         return json_decode($value);
     }
 

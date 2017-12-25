@@ -30,4 +30,5 @@ interface AuthenticableRepositoryInterface {
      * @return bool
      */
     public function setRememberToken(string $identifier, string $token): bool;
+
 }
