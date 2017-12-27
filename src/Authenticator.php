@@ -140,7 +140,7 @@ class Authenticator implements AuthenticatorInterface {
      * @return AuthenticableInterface|null
      */
     public function cookieLogin(): ?AuthenticableInterface {
-        $cookie = $this->getCookieHandler()->getCookie(sprintf($this->cookieNameFormat, 'remember_token'));
+        $cookie = $this->getCookieHandler()->get(sprintf($this->cookieNameFormat, 'remember_token'));
         if ($cookie === null) {
             return null;
         }
