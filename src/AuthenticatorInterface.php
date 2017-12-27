@@ -25,12 +25,6 @@ interface AuthenticatorInterface extends LoggerAware {
     public function getLoggedInAuthenticable(): ?AuthenticableInterface;
 
     /**
-     * @param SessionStorageInterface $sessionStorage
-     * @return mixed
-     */
-    public function setSessionStorage(SessionStorageInterface $sessionStorage);
-
-    /**
      * Authenticate a user
      *
      * @param string $identifier

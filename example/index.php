@@ -21,50 +21,49 @@ $container = new Container();
 /** @var AuthenticatorInterface $authenticator */
 $authenticator = new Authenticator();
 
-// Check if the 'submit' button is pressed.
-if (isset($_POST['submit'])) {
+// For the sake of simplicity a new anonymous object is created which inherits the AuthenticableRepositoryInterface.
+// Its bound to the interface in the container, so that it will be used when querying for a authenticable.
+$container->set(AuthenticableRepositoryInterface::class, new class implements AuthenticableRepositoryInterface {
 
-    // For the sake of simplicity a new anonymous object is created which inherits the AuthenticableRepositoryInterface.
-    // Its bound to the interface in the container, so that it will be used when querying for a authenticable.
-    $container->set(AuthenticableRepositoryInterface::class, new class implements AuthenticableRepositoryInterface {
+    public function findByIdentifier(string $identifier): ?AuthenticableInterface {
+        // Simple check, is the identifier 'admin', create a new authenticable (also a anonymous class)
+        // else null should be returned!
+        if ($identifier !== 'admin') {
+            return null;
+        }
 
-        public function findByIdentifier(string $identifier): ?AuthenticableInterface {
-            // Simple check, is the identifier 'admin', create a new authenticable (also a anonymous class)
-            // else null should be returned!
-            if ($identifier !== 'admin') {
-                return null;
+        return new class implements AuthenticableInterface {
+
+            public function getAuthIdentifier() {
+                return 'admin';
             }
 
-            return new class implements AuthenticableInterface {
+            public function getAuthPassword(): string {
+                // In this example I'm lazy and a new container is created in here.
+                // of course this would never be done in a real life case, instead it should just return the
+                // users password as stored in the db (encrypted!!!).
+                $container = new Container();
+                $crypto    = $container->get(CryptoInterface::class); // Blowfish crypto by default.
+                return $crypto->encrypt('admin');
+            }
 
-                public function getAuthIdentifier() {
-                    return 'admin';
-                }
+            public function getRememberToken(): string {
+                return ''; // Ignore remember token, this example does not support it.
+            }
 
-                public function getAuthPassword(): string {
-                    // In this example I'm lazy and a new container is created in here.
-                    // of course this would never be done in a real life case, instead it should just return the
-                    // users password as stored in the db (encrypted!!!).
-                    $container = new Container();
-                    $crypto    = $container->get(CryptoInterface::class); // Blowfish crypto by default.
-                    return $crypto->encrypt('admin');
-                }
+            public function setRememberToken(string $token) {
+                // Ignore this too, due to same as above.
+            }
+        };
+    }
 
-                public function getRememberToken(): string {
-                    return ''; // Ignore remember token, this example does not support it.
-                }
+    public function setRememberToken(string $identifier, string $token): bool {
+        return false; // Nope!
+    }
+});
 
-                public function setRememberToken(string $token) {
-                    // Ignore this too, due to same as above.
-                }
-            };
-        }
-
-        public function setRememberToken(string $identifier, string $token): bool {
-            return false; // Nope!
-        }
-    });
-
+// Check if the 'submit' button is pressed.
+if (isset($_POST['submit'])) {
     // Log the user in.
     // In this example, when the authenticator calls login with the supplied username and password, the authenticator
     // will fetch the auth object by identifier (admin) from the repository created above.
@@ -79,18 +78,28 @@ if (isset($_POST['submit'])) {
 $auth = $authenticator->getLoggedInAuthenticable();
 if ($auth !== null) {
     // If auth is not null, there is a user logged in!
-    printf('User %s is logged in.', $auth->getAuthIdentifier());
-    die();
+    if (isset($_POST['logout'])) {
+        $authenticator->logout($auth);
+        echo 'Logged out.';
+    } else {
+        ?>
+        <body>
+            <span><?php printf('User %s is logged in.', $auth->getAuthIdentifier()) ?></span>
+            <form method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>">
+                <input type="submit" value="Log out!" name="logout"/>
+            </form>
+        </body>
+        <?php
+        die();
+    }
 }
 ?>
     <body>
     <form method="post" action="<?php echo $_SERVER["PHP_SELF"] ?>">
         <label for="username">Username:</label>
         <input type="text" id="username" name="username">
-
         <label for="password">Password</label>
         <input type="password" id="password" name="password">
-
         <input type="submit" value="Login!" name="submit">
     </form>
     </body>
