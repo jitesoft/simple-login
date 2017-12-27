@@ -4,12 +4,12 @@
 
   © - Jitesoft 2017
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-namespace Jitesoft\SimpleLogin\Tests\CookieHandler;
+namespace Jitesoft\SimpleLogin\Tests\Cookies;
 
 use Carbon\Carbon;
-use Jitesoft\SimpleLogin\CookieHandler\Cookie;
-use Jitesoft\SimpleLogin\CookieHandler\CookieHandler;
-use Jitesoft\SimpleLogin\CookieHandler\CookieHandlerInterface;
+use Jitesoft\SimpleLogin\Cookies\Cookie;
+use Jitesoft\SimpleLogin\Cookies\CookieHandler;
+use Jitesoft\SimpleLogin\Cookies\CookieHandlerInterface;
 use phpmock\Mock;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;

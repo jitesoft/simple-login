@@ -8,14 +8,15 @@ namespace Jitesoft\SimpleLogin;
 
 use Jitesoft\Container\Container;
 use Jitesoft\Log\NullLogger;
-use Jitesoft\SimpleLogin\CookieHandler\CookieHandler;
-use Jitesoft\SimpleLogin\CookieHandler\CookieHandlerInterface;
+use Jitesoft\SimpleLogin\Cookies\CookieHandler;
+use Jitesoft\SimpleLogin\Cookies\CookieHandlerInterface;
 use Jitesoft\SimpleLogin\Crypto\CryptoInterface;
 use Jitesoft\SimpleLogin\Crypto\BlowfishCrypto;
-use Jitesoft\SimpleLogin\SessionStorage\SessionStorage;
-use Jitesoft\SimpleLogin\SessionStorage\SessionStorageInterface;
+use Jitesoft\SimpleLogin\Sessions\SessionStorage;
+use Jitesoft\SimpleLogin\Sessions\SessionStorageInterface;
 use Psr\Log\LoggerInterface;
 
+// @codeCoverageIgnoreStart
 return [
     // If using another container with set dependencies, change the ContainerInterface dependency to it.
     'Container' => new Container([
@@ -26,3 +27,4 @@ return [
     ]),
     'ThrowExceptions' => true
 ];
+// @codeCoverageIgnoreEnd

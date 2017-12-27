@@ -4,7 +4,7 @@
 
   © - Jitesoft 2017
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-namespace Jitesoft\SimpleLogin\SessionStorage;
+namespace Jitesoft\SimpleLogin\Sessions;
 
 use Psr\Log\LoggerAwareInterface as LoggerAware;
 

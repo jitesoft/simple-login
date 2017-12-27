@@ -7,9 +7,10 @@
 namespace Jitesoft\SimpleLogin;
 
 use Jitesoft\Container\Container;
-use Jitesoft\SimpleLogin\CookieHandler\CookieHandlerInterface;
+use Jitesoft\SimpleLogin\Cookies\CookieHandlerInterface;
 use Jitesoft\SimpleLogin\Crypto\CryptoInterface;
-use Jitesoft\SimpleLogin\SessionStorage\SessionStorageInterface;
+use Jitesoft\SimpleLogin\Sessions\SessionStorageInterface;
+use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -34,19 +35,14 @@ class Authenticator implements AuthenticatorInterface {
     /** @var CookieHandlerInterface */
     private $cookieHandler;
 
-    private function getConfig() {
+    private function getConfig(): array {
         return include_once dirname(__FILE__) . "/Config.php";
     }
 
     public function __construct() {
+        /** @var ContainerInterface $container */
         $config    = $this->getConfig();
         $container = $config['Container'];
-
-        if ($container instanceof Container) {
-            foreach ($config['Dependencies'] as $interface => $value) {
-                $container->set($interface, $value);
-            }
-        }
 
         $this->crypto                  = $container->get(CryptoInterface::class);
         $this->sessionStorage          = $container->get(SessionStorageInterface::class);

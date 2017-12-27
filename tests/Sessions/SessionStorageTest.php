@@ -4,10 +4,10 @@
 
   © - Jitesoft 2017
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-namespace Jitesoft\SimpleLogin\Tests\SessionStorage;
+namespace Jitesoft\SimpleLogin\Tests\Sessions;
 
-use Jitesoft\SimpleLogin\SessionStorage\SessionStorage;
-use Jitesoft\SimpleLogin\SessionStorage\SessionStorageInterface;
+use Jitesoft\SimpleLogin\Sessions\SessionStorage;
+use Jitesoft\SimpleLogin\Sessions\SessionStorageInterface;
 use phpmock\Mock;
 use PHPUnit\Framework\TestCase;
 

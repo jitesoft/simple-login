@@ -6,7 +6,7 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 namespace Jitesoft\SimpleLogin;
 
-use Jitesoft\SimpleLogin\SessionStorage\SessionStorageInterface;
+use Jitesoft\SimpleLogin\Sessions\SessionStorageInterface;
 use Psr\Log\LoggerAwareInterface as LoggerAware;
 
 /**

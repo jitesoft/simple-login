@@ -5,7 +5,7 @@
 
   © - Jitesoft 2017
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-namespace Jitesoft\SimpleLogin\SessionStorage;
+namespace Jitesoft\SimpleLogin\Sessions;
 
 use Jitesoft\Log\NullLogger;
 use Psr\Log\LoggerInterface;
