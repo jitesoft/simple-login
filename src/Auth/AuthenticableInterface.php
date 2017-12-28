@@ -4,7 +4,7 @@
 
   © - Jitesoft 2017
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-namespace Jitesoft\SimpleLogin;
+namespace Jitesoft\SimpleLogin\Auth;
 
 /**
  * Interface AuthenticableInterface

@@ -4,9 +4,8 @@
 
   © - Jitesoft 2017
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-namespace Jitesoft\SimpleLogin;
+namespace Jitesoft\SimpleLogin\Auth;
 
-use Jitesoft\Container\Container;
 use Jitesoft\SimpleLogin\Cookies\CookieHandlerInterface;
 use Jitesoft\SimpleLogin\Crypto\CryptoInterface;
 use Jitesoft\SimpleLogin\Sessions\SessionStorageInterface;

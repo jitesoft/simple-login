@@ -1,10 +1,10 @@
 <?php
 require_once '../vendor/autoload.php';
 use Jitesoft\Container\Container;
-use Jitesoft\SimpleLogin\AuthenticableRepositoryInterface;
-use Jitesoft\SimpleLogin\Authenticator;
-use Jitesoft\SimpleLogin\AuthenticableInterface;
-use Jitesoft\SimpleLogin\AuthenticatorInterface;
+use Jitesoft\SimpleLogin\Auth\AuthenticableRepositoryInterface;
+use Jitesoft\SimpleLogin\Auth\Authenticator;
+use Jitesoft\SimpleLogin\Auth\AuthenticableInterface;
+use Jitesoft\SimpleLogin\Auth\AuthenticatorInterface;
 use Jitesoft\SimpleLogin\Crypto\CryptoInterface;
 use Psr\Container\ContainerInterface;
 
