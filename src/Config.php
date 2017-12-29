@@ -20,6 +20,7 @@ use Psr\Log\LoggerInterface;
  * Class Config
  *
  * @property Container $container
+ * @codeCoverageIgnore
  */
 class Config {
 
@@ -33,7 +34,7 @@ class Config {
             CookieHandlerInterface::class  => new CookieHandler()
         ], $containerBindings);
 
-        $this->container = new Container($containerBindings);
+        $this->container = Container::createContainer('simple_login', $containerBindings);
     }
 
     public function __get($val) {
