@@ -6,6 +6,7 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 namespace Jitesoft\SimpleLogin\Auth;
 
+use Jitesoft\SimpleLogin\Config;
 use Jitesoft\SimpleLogin\Cookies\CookieHandlerInterface;
 use Jitesoft\SimpleLogin\Crypto\CryptoInterface;
 use Jitesoft\SimpleLogin\Sessions\SessionStorageInterface;
@@ -45,12 +46,12 @@ class Authenticator implements AuthenticatorInterface {
     }
 
 
-    public function __construct(string $config = null) {
+    public function __construct(?Config $config = null) {
         if ($config === null) {
-            $config = include_once dirname(__FILE__) . "/Config.php";
+            $config = new Config();
         }
         /** @var ContainerInterface $container */
-        $this->container = $config['Container'];
+        $this->container = $config->container;
     }
 
     public function getLoggedInAuthenticable(): ?AuthenticableInterface {

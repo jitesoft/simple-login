@@ -1,29 +1,20 @@
 <?php
-require_once '../vendor/autoload.php';
+require_once '../../vendor/autoload.php';
 use Jitesoft\Container\Container;
 use Jitesoft\SimpleLogin\Auth\AuthenticableRepositoryInterface;
 use Jitesoft\SimpleLogin\Auth\Authenticator;
 use Jitesoft\SimpleLogin\Auth\AuthenticableInterface;
 use Jitesoft\SimpleLogin\Auth\AuthenticatorInterface;
+use Jitesoft\SimpleLogin\Config;
 use Jitesoft\SimpleLogin\Crypto\CryptoInterface;
-use Psr\Container\ContainerInterface;
 
 // In this example we only have a very very simple form for logging in a user named admin with the password admin.
 // Due to the nature of the example, I've decided that the container should load a different AuthenticableRepository,
 // this so that we can easily just check the given username and password of a "faked" user.
 
-// First of, the container is created. Any container created will use the same data inside, cause of the static
-// arrays it uses.
-/** @var ContainerInterface $container */
-$container = new Container();
-// Due to login functionality the best way to check if a user is logged in is to use
-// the AuthenticatorInterface implementation.
-/** @var AuthenticatorInterface $authenticator */
-$authenticator = new Authenticator();
-
 // For the sake of simplicity a new anonymous object is created which inherits the AuthenticableRepositoryInterface.
 // Its bound to the interface in the container, so that it will be used when querying for a authenticable.
-$container->set(AuthenticableRepositoryInterface::class, new class implements AuthenticableRepositoryInterface {
+$authRepoImplementation = new class implements AuthenticableRepositoryInterface {
 
     public function findByIdentifier(string $identifier): ?AuthenticableInterface {
         // Simple check, is the identifier 'admin', create a new authenticable (also a anonymous class)
@@ -60,7 +51,16 @@ $container->set(AuthenticableRepositoryInterface::class, new class implements Au
     public function setRememberToken(string $identifier, string $token): bool {
         return false; // Nope!
     }
-});
+};
+
+// A configuration object is not required to be passed to the constructor of the Authenticator, but
+// to easily bind the Auth repository to its interface, we create one here and pass our implementation in.
+$config = new Config([AuthenticableRepositoryInterface::class => $authRepoImplementation]);
+
+// Due to login functionality the best way to check if a user is logged in is to use
+// the AuthenticatorInterface implementation.
+/** @var AuthenticatorInterface $authenticator */
+$authenticator = new Authenticator($config);
 
 // Check if the 'submit' button is pressed.
 if (isset($_POST['submit'])) {

@@ -16,15 +16,31 @@ use Jitesoft\SimpleLogin\Sessions\SessionStorage;
 use Jitesoft\SimpleLogin\Sessions\SessionStorageInterface;
 use Psr\Log\LoggerInterface;
 
-// @codeCoverageIgnoreStart
-return [
-    // If using another container with set dependencies, change the ContainerInterface dependency to it.
-    'Container' => new Container([
-        LoggerInterface::class         => new NullLogger(),
-        CryptoInterface::class         => new BlowfishCrypto(),
-        SessionStorageInterface::class => new SessionStorage(),
-        CookieHandlerInterface::class  => new CookieHandler()
-    ]),
-    'ThrowExceptions' => true
-];
-// @codeCoverageIgnoreEnd
+/**
+ * Class Config
+ *
+ * @property Container $container
+ */
+class Config {
+
+    protected $container;
+
+    public function __construct(array $containerBindings = []) {
+        $containerBindings = array_merge([
+            LoggerInterface::class         => new NullLogger(),
+            CryptoInterface::class         => new BlowfishCrypto(),
+            SessionStorageInterface::class => new SessionStorage(),
+            CookieHandlerInterface::class  => new CookieHandler()
+        ], $containerBindings);
+
+        $this->container = new Container($containerBindings);
+    }
+
+    public function __get($val) {
+        if (property_exists(self::class, $val)) {
+            return $this->{$val};
+        }
+        return null;
+    }
+
+}
