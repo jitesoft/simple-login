@@ -7,7 +7,6 @@
 namespace Jitesoft\SimpleLogin\Cookies;
 
 use Carbon\Carbon;
-use Jitesoft\Log\NullLogger;
 use Psr\Log\LoggerInterface;
 
 class CookieHandler implements CookieHandlerInterface {
@@ -18,10 +17,6 @@ class CookieHandler implements CookieHandlerInterface {
         $this->logger = $logger;
     }
 
-    protected function getLogger(): LoggerInterface {
-        return $this->logger ?? new NullLogger();
-    }
-
     /**
      * Get a cookie from the cookie handler.
      *
@@ -30,7 +25,7 @@ class CookieHandler implements CookieHandlerInterface {
      *
      */
     public function get(string $id): ?Cookie {
-        $this->getLogger()->debug('Trying to fetch cookie data from cookie with id {id}.', [
+        $this->logger->debug('Trying to fetch cookie data from cookie with id {id}.', [
             'id' => $id
         ]);
 
@@ -44,11 +39,11 @@ class CookieHandler implements CookieHandlerInterface {
                 $cookieData['domain'],
                 $cookieData['location']
             );
-            $this->getLogger()->debug('Cookie fetched successfully.');
+            $this->logger->debug('Cookie fetched successfully.');
             return $cookie;
         }
 
-        $this->getLogger()->error('Failed to fetch cookie data for cookie with id {id}.', [
+        $this->logger->error('Failed to fetch cookie data for cookie with id {id}.', [
             'id' => $id
         ]);
 
@@ -80,7 +75,7 @@ class CookieHandler implements CookieHandlerInterface {
             $cookie   = $cookie->getKey();
         }
 
-        $this->getLogger()->debug('Creating a cookie with id {id} and lifetime {lifetime}.',
+        $this->logger->debug('Creating a cookie with id {id} and lifetime {lifetime}.',
             [
                 'id'       => $cookie,
                 'lifetime' => $lifetime
@@ -108,7 +103,7 @@ class CookieHandler implements CookieHandlerInterface {
      */
     public function has(string $id): bool {
         $result = array_key_exists($id, $_COOKIE);
-        $this->getLogger()->debug('Checking if cookie with id {id} exists. Result: {result}.', [
+        $this->logger->debug('Checking if cookie with id {id} exists. Result: {result}.', [
             'id'     => $id,
             'result' => $result
         ]);
@@ -123,7 +118,7 @@ class CookieHandler implements CookieHandlerInterface {
      */
     public function unset($cookie): bool {
         $id = $cookie instanceof Cookie ? $cookie->getValue() : $cookie;
-        $this->getLogger()->debug('Removing cookie with id {id}.', ['id' => $id]);
+        $this->logger->debug('Removing cookie with id {id}.', ['id' => $id]);
         if (!$this->has($id)) {
             return false;
         }

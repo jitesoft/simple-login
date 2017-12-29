@@ -7,7 +7,6 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 namespace Jitesoft\SimpleLogin\Sessions;
 
-use Jitesoft\Log\NullLogger;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -45,13 +44,6 @@ class SessionStorage implements SessionStorageInterface {
     }
 
     /**
-     * @return LoggerInterface
-     */
-    private function getLogger(): LoggerInterface {
-        return $this->logger ?? new NullLogger();
-    }
-
-    /**
      * Fetch a value by its key from the session storage.
      * If the value is not set, the default parameter value will be returned instead.
      *
@@ -60,12 +52,12 @@ class SessionStorage implements SessionStorageInterface {
      * @return mixed          - The resulting value, either the set value or the default parameter.
      */
     public function get(string $key, $default = null) {
-        $this->getLogger()->debug("Trying to fetch value from session with key {key}.", ['key'=> $key]);
+        $this->logger->debug("Trying to fetch value from session with key {key}.", ['key'=> $key]);
 
         $key   = sprintf($this->sessionFromat, $key);
         $value = isset($_SESSION[$key]) ? $_SESSION[$key] : null;
         if ($value === null) {
-            $this->getLogger()->error("Failed to get session value with key {key}.", ['key' => $key]);
+            $this->logger->error("Failed to get session value with key {key}.", ['key' => $key]);
             return $default;
         }
 
@@ -81,7 +73,7 @@ class SessionStorage implements SessionStorageInterface {
      * @return bool         - Result, true if success, false if error.
      */
     public function set(string $key, $value): bool {
-        $this->getLogger()->debug("Trying to write session variable with key {key}.", ['key' => $key]);
+        $this->logger->debug("Trying to write session variable with key {key}.", ['key' => $key]);
         $_SESSION[sprintf($this->sessionFromat, $key)] = json_encode($value);
         return true;
     }
@@ -91,7 +83,7 @@ class SessionStorage implements SessionStorageInterface {
      * @return bool       - Result, true if unset, false if error.
      */
     public function unset(string $key): bool {
-        $this->getLogger()->debug('Attempting to destroy session with key {key}.', ['key' => $key]);
+        $this->logger->debug('Attempting to destroy session with key {key}.', ['key' => $key]);
 
         $key = sprintf($this->sessionFromat, $key);
         if (!isset($_SESSION[$key])) {
