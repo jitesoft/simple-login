@@ -15,8 +15,8 @@ use Psr\Log\LoggerInterface;
 
 /**
  * Class Authenticator
- *
- *
+ * This class is the entry point of the SimpleLogin system. All the logic is made
+ * either inside it or through it.
  */
 class Authenticator implements AuthenticatorInterface {
 
@@ -30,19 +30,19 @@ class Authenticator implements AuthenticatorInterface {
     private $container;
 
     private function getSessionStorage(): SessionStorageInterface {
-        return $this->container->get(SessionStorageInterface::class);
+        return $this->container[SessionStorageInterface::class];
     }
 
     private function getCookieHandler(): CookieHandlerInterface {
-        return $this->container->get(CookieHandlerInterface::class);
+        return $this->container[CookieHandlerInterface::class];
     }
 
     private function getCrypto(): CryptoInterface {
-        return $this->container->get(CryptoInterface::class);
+        return $this->container[CryptoInterface::class];
     }
 
     private function getAuthenticableRepository(): AuthenticableRepositoryInterface {
-        return $this->container->get(AuthenticableRepositoryInterface::class);
+        return $this->container[AuthenticableRepositoryInterface::class];
     }
 
     public function __construct(?Config $config = null) {
