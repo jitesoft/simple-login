@@ -56,7 +56,7 @@ be used instead.
 
 ## Examples
 
-In the `https://github.com/jitesoft/simple-login/tree/develop/example` directory two examples can be found.  
+In the [example](https://github.com/jitesoft/simple-login/tree/develop/example) directory two examples can be found.  
 
 The [LoginLogout](https://github.com/jitesoft/simple-login/tree/develop/example/LoginLogout) example shows how to easily use the system to login and logout from a service. To test it, just serve
 the index file via php (`php -S localhost:8000`) and navigate to `localhost:8000` in the browser. The faked user's password and username are both `admin`.
