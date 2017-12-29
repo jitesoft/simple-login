@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "377d4389c0c60d4ff03ecd8934f95a80",
+    "content-hash": "8eb3ee2647033da3195136979b3b73e2",
     "packages": [
         {
             "name": "jitesoft/container",
@@ -46,49 +46,6 @@
             ],
             "description": "Simple psr-11 dependency container with constructor injection.",
             "time": "2017-12-29T12:35:48+00:00"
-        },
-        {
-            "name": "jitesoft/exceptions",
-            "version": "2.0.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/jitesoft/php-exceptions.git",
-                "reference": "45f998abae165c83ace04b267a6acfc9a6510ee0"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/jitesoft/php-exceptions/zipball/45f998abae165c83ace04b267a6acfc9a6510ee0",
-                "reference": "45f998abae165c83ace04b267a6acfc9a6510ee0",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">7.1"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^6.0",
-                "squizlabs/php_codesniffer": "3.0.*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Jitesoft\\Exceptions\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Johannes Tegnér",
-                    "email": "johannes@jitesoft.com"
-                }
-            ],
-            "description": "Common php exceptions used in Jitesoft projects.",
-            "keywords": [
-                "exceptions"
-            ],
-            "time": "2017-11-28T07:39:11+00:00"
         },
         {
             "name": "jitesoft/loggers",

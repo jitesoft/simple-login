@@ -1,7 +1,7 @@
 {
     "name": "jitesoft/simple-login",
     "description": "A super simple login system!",
-    "type": "project",
+    "type": "library",
     "license": "MIT",
     "authors": [
         {
@@ -22,7 +22,6 @@
     "require": {
         "php": ">=7.1",
         "psr/log": "^1.0",
-        "jitesoft/exceptions": "^2.0",
         "jitesoft/container": "2.0.0",
         "jitesoft/loggers": "^1.0",
         "ext-openssl": "^7.1"
