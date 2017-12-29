@@ -56,10 +56,10 @@ be used instead.
 
 ## Examples
 
-In the [example](https://github.com/jitesoft/simple-login/tree/develop/example) directory two examples can be found.  
+In the [example](https://github.com/jitesoft/simple-login/tree/master/example) directory two examples can be found.  
 
-The [LoginLogout](https://github.com/jitesoft/simple-login/tree/develop/example/LoginLogout) example shows how to easily use the system to login and logout from a service. To test it, just serve
+The [LoginLogout](https://github.com/jitesoft/simple-login/tree/master/example/LogginLogout) example shows how to easily use the system to login and logout from a service. To test it, just serve
 the index file via php (`php -S localhost:8000`) and navigate to `localhost:8000` in the browser. The faked user's password and username are both `admin`.
 
-The [Repository](https://github.com/jitesoft/simple-login/tree/develop/example/Repository) example shows how to easily implement your own repository to be used in the system, it uses a `PDO` object to 
+The [Repository](https://github.com/jitesoft/simple-login/tree/master/example/Repository) example shows how to easily implement your own repository to be used in the system, it uses a `PDO` object to 
 handle the database queries.
