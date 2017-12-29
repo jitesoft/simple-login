@@ -4,16 +4,12 @@
 
 [![codecov](https://codecov.io/gh/jitesoft/simple-login/branch/master/graph/badge.svg)](https://codecov.io/gh/jitesoft/simple-login)
 
-## Observe!
-
-This repository is under development and the project is not yet production ready.  
-
-----
-
 A simple login system which can be used as a standalone package or extended as a package in whatever framework you prefer.
 
 Simple login comes with a very simple dependency container. The container implements the PSR-11 container interface. Which makes it possible
-to switch to any other PSR-11 compatible container.
+to switch to any other PSR-11 compatible container.  
+Most interfaces extends the PSR-3 `LoggerAwareInterface`, the default logger is a `NullLogger` which ignores all output, it 
+can easily be changed to another logged by binding the `PSR\Log\LoggerInterface` binding in the container or Config class.
 
 ## Installation
 
@@ -53,6 +49,14 @@ setting your bindings when constructing the `Config` object that you pass into t
 If you wish to change the Container to another PSR-11 container, you can create a new Config class which inherits from the 
 `Jitesoft\SimpleLogin\Config` class. Set the protected `$container` field to your specific Container implementation and it will
 be used instead.
+
+By default the following implementations are bound via the Config file:
+
+* `Jitesoft\SimpleLogin\`
+  * [`\Cookies\CookieHandlerInterface`](https://github.com/jitesoft/simple-login/blob/master/src/CookieHandler/CookieHandlerInterface.php) - [`\Cookies\CookieHandler`](https://github.com/jitesoft/simple-login/blob/master/src/CookieHandler/CookieHandler.php)
+  * [`\Crypto\CryptoInterface`](https://github.com/jitesoft/simple-login/blob/master/src/Crypto/CryptoInterface.php) - [`\Crypto\BlowfishCrypto`](https://github.com/jitesoft/simple-login/blob/master/src/Crypto/BlowfishCrypto.php)
+  * [`\Sessions\SessionStorageInterface`](https://github.com/jitesoft/simple-login/blob/master/src/SessionStorage/SessionStorageInterface.php) - [`\Sessions\SessionStorage`](https://github.com/jitesoft/simple-login/blob/master/src/SessionStorage/SessionStorage.php)
+* [`PSR\Log\LoggerInterface`](https://github.com/php-fig/log/blob/master/Psr/Log/LoggerInterface.php) - [`Jitesoft\Log\NullLogger`](https://github.com/jitesoft/php-loggers/blob/master/src/NullLogger.php)
 
 ## Examples
 
