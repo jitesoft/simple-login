@@ -1,17 +1,15 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-  BlowfishCryptoTest.php - Part of the simple-login project.
+  CryptoTestart of the simple-login project.
 
   © - Jitesoft 2017
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 namespace Jitesoft\SimpleLogin\Tests\Crypto;
 
-use Jitesoft\SimpleLogin\Crypto\BlowfishCrypto;
 use Jitesoft\SimpleLogin\Crypto\CryptoInterface;
-use Jitesoft\SimpleLogin\Tests\Traits\CryptoTestTrait;
-use PHPUnit\Framework\TestCase;
+use Jitesoft\SimpleLogin\Tests\AbstractTestCase;
 
-class BlowfishCryptoTest extends TestCase {
+class CryptoTest extends AbstractTestCase {
 
     /** @var CryptoInterface */
     protected $implementation;
@@ -21,7 +19,7 @@ class BlowfishCryptoTest extends TestCase {
     protected function setUp() {
         parent::setUp();
 
-        $this->implementation     = new BlowfishCrypto();
+        $this->implementation     = $this->container->get(CryptoInterface::class);
         $this->testEncryptedValue = function(string $value) {
             $info = password_get_info($value);
             $this->assertEquals(PASSWORD_BCRYPT, $info['algo']);

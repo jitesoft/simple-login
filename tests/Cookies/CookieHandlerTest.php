@@ -10,11 +10,11 @@ use Carbon\Carbon;
 use Jitesoft\SimpleLogin\Cookies\Cookie;
 use Jitesoft\SimpleLogin\Cookies\CookieHandler;
 use Jitesoft\SimpleLogin\Cookies\CookieHandlerInterface;
+use Jitesoft\SimpleLogin\Tests\AbstractTestCase;
 use phpmock\Mock;
-use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 
-class CookieHandlerTest extends TestCase {
+class CookieHandlerTest extends AbstractTestCase {
 
     protected $namespace;
     /** @var CookieHandlerInterface */
@@ -23,7 +23,7 @@ class CookieHandlerTest extends TestCase {
     protected function setUp() {
         parent::setUp();
         Carbon::setTestNow(new Carbon('2017-10-01', 'UTC'));
-        $this->cookieHandler = new CookieHandler();
+        $this->cookieHandler = $this->container->get(CookieHandlerInterface::class);
         $this->namespace     = (new ReflectionClass(CookieHandler::class))->getNamespaceName();
     }
 

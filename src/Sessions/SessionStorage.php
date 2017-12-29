@@ -25,7 +25,8 @@ class SessionStorage implements SessionStorageInterface {
      * SessionStorage constructor.
      * @codeCoverageIgnore
      */
-    public function __construct() {
+    public function __construct(LoggerInterface $logger) {
+        $this->logger = $logger;
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }

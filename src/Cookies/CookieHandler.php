@@ -14,6 +14,10 @@ class CookieHandler implements CookieHandlerInterface {
 
     private $logger;
 
+    public function __construct(LoggerInterface $logger) {
+        $this->logger = $logger;
+    }
+
     protected function getLogger(): LoggerInterface {
         return $this->logger ?? new NullLogger();
     }

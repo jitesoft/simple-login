@@ -19,6 +19,10 @@ class BlowfishCrypto implements CryptoInterface {
     /** @var LoggerInterface */
     private $logger;
 
+    public function __construct(LoggerInterface $logger) {
+        $this->logger = $logger;
+    }
+
     /**
      * Sets a logger instance on the object.
      *

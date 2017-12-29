@@ -29,9 +29,9 @@ class Config {
     public function __construct(array $containerBindings = []) {
         $containerBindings = array_merge([
             LoggerInterface::class         => new NullLogger(),
-            CryptoInterface::class         => new BlowfishCrypto(),
-            SessionStorageInterface::class => new SessionStorage(),
-            CookieHandlerInterface::class  => new CookieHandler()
+            CryptoInterface::class         => BlowfishCrypto::class,
+            SessionStorageInterface::class => SessionStorage::class,
+            CookieHandlerInterface::class  => CookieHandler::class
         ], $containerBindings);
 
         $this->container = Container::createContainer('simple_login', $containerBindings);
