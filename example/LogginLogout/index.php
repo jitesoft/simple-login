@@ -33,7 +33,7 @@ $authRepoImplementation = new class implements AuthenticableRepositoryInterface 
                 // In this example I'm lazy and a new container is created in here.
                 // of course this would never be done in a real life case, instead it should just return the
                 // users password as stored in the db (encrypted!!!).
-                $container = new Container();
+                $container = Container::getContainer('simple_login');
                 $crypto    = $container->get(CryptoInterface::class); // Blowfish crypto by default.
                 return $crypto->encrypt('admin');
             }
