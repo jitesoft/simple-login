@@ -4,9 +4,8 @@
 
   © - Jitesoft 2017
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-namespace Jitesoft\SimpleLogin;
+namespace Jitesoft\SimpleLogin\Auth;
 
-use Jitesoft\SimpleLogin\SessionStorage\SessionStorageInterface;
 use Psr\Log\LoggerAwareInterface as LoggerAware;
 
 /**
@@ -23,12 +22,6 @@ interface AuthenticatorInterface extends LoggerAware {
      * @return AuthenticableInterface|null
      */
     public function getLoggedInAuthenticable(): ?AuthenticableInterface;
-
-    /**
-     * @param SessionStorageInterface $sessionStorage
-     * @return mixed
-     */
-    public function setSessionStorage(SessionStorageInterface $sessionStorage);
 
     /**
      * Authenticate a user

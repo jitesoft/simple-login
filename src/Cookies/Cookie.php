@@ -4,7 +4,7 @@
 
   © - Jitesoft 2017
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-namespace Jitesoft\SimpleLogin\CookieHandler;
+namespace Jitesoft\SimpleLogin\Cookies;
 
 /**
  * Class Cookie

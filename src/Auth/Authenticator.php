@@ -4,69 +4,62 @@
 
   © - Jitesoft 2017
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-namespace Jitesoft\SimpleLogin;
+namespace Jitesoft\SimpleLogin\Auth;
 
-use Jitesoft\Container\Container;
-use Jitesoft\SimpleLogin\CookieHandler\CookieHandlerInterface;
+use Jitesoft\SimpleLogin\Config;
+use Jitesoft\SimpleLogin\Cookies\CookieHandlerInterface;
 use Jitesoft\SimpleLogin\Crypto\CryptoInterface;
-use Jitesoft\SimpleLogin\SessionStorage\SessionStorageInterface;
+use Jitesoft\SimpleLogin\Sessions\SessionStorageInterface;
+use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 
 /**
  * Class Authenticator
- *
- *
+ * This class is the entry point of the SimpleLogin system. All the logic is made
+ * either inside it or through it.
  */
 class Authenticator implements AuthenticatorInterface {
 
-    /** @var SessionStorageInterface */
-    private $sessionStorage;
-    /** @var CryptoInterface */
-    private $crypto;
     /** @var LoggerInterface */
     private $logger;
-    /** @var AuthenticableRepositoryInterface */
-    private $authenticableRepository;
     /** @var string */
     private $rememberTokenFormat = '%s:%s';
     /** @var string */
     private $cookieNameFormat = 'simple_login_cookie_%s';
+    /** @var ContainerInterface */
+    private $container;
+    /** @var SessionStorageInterface */
+    private $sessionStorage;
     /** @var CookieHandlerInterface */
     private $cookieHandler;
+    /** @var AuthenticableRepositoryInterface */
+    private $authRepository;
+    /** @var CryptoInterface */
+    private $crypto;
 
-    private function getConfig() {
-        return include_once dirname(__FILE__) . "/Config.php";
-    }
-
-    public function __construct() {
-        $config    = $this->getConfig();
-        $container = $config['Container'];
-
-        if ($container instanceof Container) {
-            foreach ($config['Dependencies'] as $interface => $value) {
-                $container->set($interface, $value);
-            }
+    public function __construct(?Config $config = null) {
+        if ($config === null) {
+            $config = new Config();
         }
 
-        $this->crypto                  = $container->get(CryptoInterface::class);
-        $this->sessionStorage          = $container->get(SessionStorageInterface::class);
-        $this->logger                  = $container->get(LoggerInterface::class);
-        $this->authenticableRepository = $container->get(AuthenticableRepositoryInterface::class);
-        $this->cookieHandler           = $container->get(CookieHandlerInterface::class);
+        /** @var ContainerInterface $container */
+        $this->container = $config->container;
+
+        // Fetch required interfaces from container.
+        $this->logger         = $this->container[LoggerInterface::class];
+        $this->sessionStorage = $this->container[SessionStorageInterface::class];
+        $this->cookieHandler  = $this->container[CookieHandlerInterface::class];
+        $this->crypto         = $this->container[CryptoInterface::class];
+        $this->authRepository = $this->container[AuthenticableRepositoryInterface::class];
     }
 
     public function getLoggedInAuthenticable(): ?AuthenticableInterface {
         $auth = $this->sessionStorage->get('auth');
-        return $this->authenticableRepository->findByIdentifier($auth->identifier);
-    }
+        if (!$auth) {
+            return null;
+        }
 
-    /**
-     * @param SessionStorageInterface $sessionStorage
-     *
-     * @return void
-     */
-    public function setSessionStorage(SessionStorageInterface $sessionStorage) {
-        $this->sessionStorage = $sessionStorage;
+        return $this->authRepository->findByIdentifier($auth->identifier);
     }
 
     /**
@@ -89,7 +82,7 @@ class Authenticator implements AuthenticatorInterface {
      */
     public function authenticate(string $identifier, string $key): bool {
         // Fetch the user from the auth service.
-        $auth = $this->authenticableRepository->findByIdentifier($identifier);
+        $auth = $this->authRepository->findByIdentifier($identifier);
         return $this->crypto->validate($key, $auth->getAuthPassword());
     }
 
@@ -102,7 +95,7 @@ class Authenticator implements AuthenticatorInterface {
      * @return AuthenticableInterface|null - Result, User object on successful login, else null.
      */
     public function login(string $identifier, string $key, bool $remember = false): ?AuthenticableInterface {
-        $auth = $this->authenticableRepository->findByIdentifier($identifier);
+        $auth = $this->authRepository->findByIdentifier($identifier);
 
         if ($auth === null) {
             return null;
@@ -118,7 +111,10 @@ class Authenticator implements AuthenticatorInterface {
                 $userIp = $_SERVER['REMOTE_ADDR'];
                 $key    = openssl_random_pseudo_bytes(64);
                 $auth->setRememberToken($key);
-                $this->authenticableRepository->setRememberToken($auth->getAuthIdentifier(), $auth->getRememberToken());
+                $this->authRepository->setRememberToken(
+                    $auth->getAuthIdentifier(),
+                    $auth->getRememberToken()
+                );
                 $this->cookieHandler->set(
                    sprintf($this->cookieNameFormat, 'remember_token'),
                    base64_encode(
@@ -144,7 +140,7 @@ class Authenticator implements AuthenticatorInterface {
      * @return AuthenticableInterface|null
      */
     public function cookieLogin(): ?AuthenticableInterface {
-        $cookie = $this->cookieHandler->getCookie(sprintf($this->cookieNameFormat, 'remember_token'));
+        $cookie = $this->cookieHandler->get(sprintf($this->cookieNameFormat, 'remember_token'));
         if ($cookie === null) {
             return null;
         }
@@ -154,7 +150,7 @@ class Authenticator implements AuthenticatorInterface {
         $id      = explode(':', $decoded)[0];
         $key     = explode(':', $decoded)[1];
 
-        $auth = $this->authenticableRepository->findByIdentifier($id);
+        $auth = $this->authRepository->findByIdentifier($id);
         if ($auth === null) {
             return null;
         }
@@ -174,16 +170,16 @@ class Authenticator implements AuthenticatorInterface {
      * @return bool                                      - Result, true if successful, else false.
      */
     public function logout(?AuthenticableInterface $authenticable = null): bool {
-        $auth = $this->sessionStorage->get('simple_login_auth', null);
+        $auth = $this->sessionStorage->get('auth', null);
         if (!$auth) {
             return false;
         }
 
-        if ($auth['identifier'] !== $authenticable->getAuthIdentifier()) {
+        if ($auth->identifier !== $authenticable->getAuthIdentifier()) {
             return false;
         }
 
-        $this->sessionStorage->set('simple_login_auth', null);
+        $this->sessionStorage->set('auth', null);
         return true;
     }
 

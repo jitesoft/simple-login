@@ -1,24 +1,30 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-  CryptoTestTrait.php - Part of the simple-login project.
+  CryptoTestart of the simple-login project.
 
   © - Jitesoft 2017
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-namespace Jitesoft\SimpleLogin\Tests\Traits;
+namespace Jitesoft\SimpleLogin\Tests\Crypto;
 
-use Jitesoft\SimpleLogin\Contracts\CryptoInterface;
-use PHPUnit\Framework\TestCase;
+use Jitesoft\SimpleLogin\Crypto\CryptoInterface;
+use Jitesoft\SimpleLogin\Tests\AbstractTestCase;
 
-/**
- * @mixin TestCase
- */
-trait CryptoTestTrait {
+class CryptoTest extends AbstractTestCase {
 
     /** @var CryptoInterface */
     protected $implementation;
-
     /** @var callable */
     protected $testEncryptedValue;
+
+    protected function setUp() {
+        parent::setUp();
+
+        $this->implementation     = $this->container->get(CryptoInterface::class);
+        $this->testEncryptedValue = function(string $value) {
+            $info = password_get_info($value);
+            $this->assertEquals(PASSWORD_BCRYPT, $info['algo']);
+        };
+    }
 
     public function testEncrypt() {
         $result = $this->implementation->encrypt("value");
@@ -48,5 +54,4 @@ trait CryptoTestTrait {
     public function testValidateInvalidAlgo() {
         $this->assertFalse($this->implementation->validate('abc123', 'abc453'));
     }
-
 }
