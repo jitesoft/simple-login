@@ -4,24 +4,24 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "e5798f22f368491ee947eff6eb59d1ec",
+    "content-hash": "377d4389c0c60d4ff03ecd8934f95a80",
     "packages": [
         {
             "name": "jitesoft/container",
-            "version": "1.1.0",
+            "version": "2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jitesoft/php-container.git",
-                "reference": "14b55e7230055ba1bad44439aa1d8d7cbd881aee"
+                "reference": "76cdc835b999d601e5b555bb5510369bbba06759"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jitesoft/php-container/zipball/14b55e7230055ba1bad44439aa1d8d7cbd881aee",
-                "reference": "14b55e7230055ba1bad44439aa1d8d7cbd881aee",
+                "url": "https://api.github.com/repos/jitesoft/php-container/zipball/76cdc835b999d601e5b555bb5510369bbba06759",
+                "reference": "76cdc835b999d601e5b555bb5510369bbba06759",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.2",
+                "php": ">=7.1",
                 "psr/container": "^1.0"
             },
             "require-dev": {
@@ -45,7 +45,7 @@
                 }
             ],
             "description": "Simple psr-11 dependency container with constructor injection.",
-            "time": "2017-12-23T20:09:00+00:00"
+            "time": "2017-12-29T12:35:48+00:00"
         },
         {
             "name": "jitesoft/exceptions",
@@ -1986,8 +1986,8 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=7.2",
-        "ext-openssl": "^7.2"
+        "php": ">=7.1",
+        "ext-openssl": "^7.1"
     },
     "platform-dev": []
 }
