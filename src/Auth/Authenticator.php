@@ -54,11 +54,14 @@ class Authenticator implements AuthenticatorInterface {
     }
 
     public function getLoggedInAuthenticable(): ?AuthenticableInterface {
+        $this->logger->debug('Attempting to fetch currently logged in authenticable.');
         $auth = $this->sessionStorage->get('auth');
         if (!$auth) {
+            $this->logger->debug('No authenticable currently logged in.');
             return null;
         }
 
+        $this->logger->debug('Successfully fetched logged in authenticable.');
         return $this->authRepository->findByIdentifier($auth->identifier);
     }
 
@@ -81,9 +84,12 @@ class Authenticator implements AuthenticatorInterface {
      * @return bool
      */
     public function authenticate(string $identifier, string $key): bool {
+        $this->logger->debug('Authenticating a given id:key pair.');
         // Fetch the user from the auth service.
-        $auth = $this->authRepository->findByIdentifier($identifier);
-        return $this->crypto->validate($key, $auth->getAuthPassword());
+        $auth   = $this->authRepository->findByIdentifier($identifier);
+        $result = $this->crypto->validate($key, $auth->getAuthPassword());
+        $this->logger->debug('Result: {result}.', ['result' => $result]);
+        return $result;
     }
 
     /**
@@ -95,18 +101,25 @@ class Authenticator implements AuthenticatorInterface {
      * @return AuthenticableInterface|null - Result, User object on successful login, else null.
      */
     public function login(string $identifier, string $key, bool $remember = false): ?AuthenticableInterface {
+        $this->logger->debug('Trying to log in authenticable with identifier: {id}', ['id' => $identifier]);
         $auth = $this->authRepository->findByIdentifier($identifier);
 
         if ($auth === null) {
+            $this->logger->error('No authenticable with the identifier {id} could be found.', ['id' => $identifier]);
             return null;
         }
 
         if ($this->crypto->validate($key, $auth->getAuthPassword())) {
+            $this->logger->debug(
+                'The authenticable with identifier {id} was successfully validated.',
+                ['id' => $identifier]
+            );
             $this->sessionStorage->set('auth', [
                 'identifier'      => $auth->getAuthIdentifier()
             ]);
 
             if ($remember) {
+                $this->logger->debug('Creating remember token.');
                 // Create remember token from random string.
                 $userIp = $_SERVER['REMOTE_ADDR'];
                 $key    = openssl_random_pseudo_bytes(64);
@@ -127,9 +140,14 @@ class Authenticator implements AuthenticatorInterface {
                 );
             }
 
+            $this->logger->debug('Returning the result.');
             return $auth;
         }
 
+        $this->logger->error(
+            'Failed to validate the password of authenticable with identifier {id}',
+            ['id' => $identifier]
+        );
         return null;
     }
 
@@ -140,8 +158,10 @@ class Authenticator implements AuthenticatorInterface {
      * @return AuthenticableInterface|null
      */
     public function cookieLogin(): ?AuthenticableInterface {
+        $this->logger->debug('Attempting to log a authenticable in via their remember token.');
         $cookie = $this->cookieHandler->get(sprintf($this->cookieNameFormat, 'remember_token'));
         if ($cookie === null) {
+            $this->logger->warning('No cookie found.');
             return null;
         }
 
@@ -152,13 +172,16 @@ class Authenticator implements AuthenticatorInterface {
 
         $auth = $this->authRepository->findByIdentifier($id);
         if ($auth === null) {
+            $this->logger->error('Authenticable with id from token could not be found.');
             return null;
         }
 
         if ($this->crypto->validate($auth->getRememberToken(), sprintf('%s.%s', $key, $userIp))) {
+            $this->logger->debug('Successfully verified the token and authenticable.');
             return $auth;
         }
 
+        $this->logger->warning('Failed to log in authenticable with remember token.');
         return null;
     }
 
@@ -170,15 +193,17 @@ class Authenticator implements AuthenticatorInterface {
      * @return bool                                      - Result, true if successful, else false.
      */
     public function logout(?AuthenticableInterface $authenticable = null): bool {
-        $auth = $this->sessionStorage->get('auth', null);
-        if (!$auth) {
+        $this->logger->debug('Starting logout procedure.');
+        if ($authenticable === null) {
+            $authenticable = $this->sessionStorage->get('auth', null);
+        }
+
+        if (!$authenticable) {
+            $this->logger->error('Failed to log out authenticable, could not found authenticable.');
             return false;
         }
 
-        if ($auth->identifier !== $authenticable->getAuthIdentifier()) {
-            return false;
-        }
-
+        $this->logger->debug('Authenticable found, identifier {id}.', $authenticable->getAuthIdentifier());
         $this->sessionStorage->set('auth', null);
         return true;
     }
