@@ -40,6 +40,7 @@ class Config {
         if (property_exists(self::class, $val)) {
             return $this->{$val};
         }
+
         return null;
     }
 

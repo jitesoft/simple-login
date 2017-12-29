@@ -45,11 +45,11 @@ class Authenticator implements AuthenticatorInterface {
         return $this->container->get(AuthenticableRepositoryInterface::class);
     }
 
-
     public function __construct(?Config $config = null) {
         if ($config === null) {
             $config = new Config();
         }
+
         /** @var ContainerInterface $container */
         $this->container = $config->container;
     }
@@ -59,6 +59,7 @@ class Authenticator implements AuthenticatorInterface {
         if (!$auth) {
             return null;
         }
+
         return $this->getAuthenticableRepository()->findByIdentifier($auth->identifier);
     }
 
