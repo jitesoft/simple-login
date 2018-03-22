@@ -21,11 +21,4 @@ class AbstractTestCase extends TestCase {
         $this->container = (new Config())->container;
     }
 
-    protected function tearDown() {
-        parent::tearDown();
-
-        Container::removeContainer('simple_login');
-    }
-
-
 }

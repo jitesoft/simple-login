@@ -7,6 +7,7 @@
 namespace Jitesoft\SimpleLogin;
 
 use Jitesoft\Container\Container;
+use Jitesoft\Container\Exceptions\ContainerException;
 use Jitesoft\Log\NullLogger;
 use Jitesoft\SimpleLogin\Cookies\CookieHandler;
 use Jitesoft\SimpleLogin\Cookies\CookieHandlerInterface;
@@ -24,17 +25,23 @@ use Psr\Log\LoggerInterface;
  */
 class Config {
 
+    /** @var Container */
     protected $container;
 
+    /**
+     * Config constructor.
+     * @param array $containerBindings
+     * @throws ContainerException
+     */
     public function __construct(array $containerBindings = []) {
         $containerBindings = array_merge([
-            LoggerInterface::class         => new NullLogger(),
-            CryptoInterface::class         => BlowfishCrypto::class,
-            SessionStorageInterface::class => SessionStorage::class,
-            CookieHandlerInterface::class  => CookieHandler::class
+            LoggerInterface::class         => [ 'class' => NullLogger::class, 'singleton' => true ],
+            CryptoInterface::class         => [ 'class' => BlowfishCrypto::class, 'singleton' => true ],
+            SessionStorageInterface::class => [ 'class' => SessionStorage::class, 'singleton' => true ],
+            CookieHandlerInterface::class  => [ 'class' => CookieHandler::class, 'singleton' => true ]
         ], $containerBindings);
 
-        $this->container = Container::createContainer('simple_login', $containerBindings);
+        $this->container = new Container($containerBindings);
     }
 
     public function __get($val) {
